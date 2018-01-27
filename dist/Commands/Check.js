@@ -59,10 +59,10 @@ class Check {
         const embed = new discord_js_1.MessageEmbed();
         embed.color = discord_js_1.Util.resolveColor([0, 255, 255]);
         embed.thumbnail = { url: this.guild.iconURL() };
-        embed.title = "About Emoji bot";
+        embed.title = "About Stats bot";
         embed.author = {
             iconURL: "https://i.imgur.com/ibsHxIR.png",
-            name: "Emojibot",
+            name: "Statsbot",
         };
         embed.footer = {
             text: "Created by Tuxy Fluffyclaws#5072",

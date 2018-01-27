@@ -66,11 +66,11 @@ export class Check implements Command {
 
         embed.thumbnail = {url: this.guild.iconURL() };
 
-        embed.title = "About Emoji bot";
+        embed.title = "About Stats bot";
 
         embed.author = {
                 iconURL: "https://i.imgur.com/ibsHxIR.png",
-                name: "Emojibot",
+                name: "Statsbot",
             };
 
         embed.footer = {
