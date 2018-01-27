@@ -1,0 +1,26 @@
+{
+  "name": "stats-bot",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thorerik/stats-bot.git"
+  },
+  "version": "0.1.0",
+  "dependencies": {
+    "@types/node": "^8.5.9",
+    "discord.js": "github:discordjs/discord.js#master",
+    "fancy-log": "^1.3.2",
+    "moment": "^2.20.1",
+    "reflect-metadata": "^0.1.12",
+    "sequelize": "^4.32.1",
+    "sequelize-cli": "^3.2.0",
+    "sequelize-typescript": "^0.6.2",
+    "tedious": "^2.2.4"
+  },
+  "scripts": {
+    "start": "node dist/bot.js",
+    "build": "tsc",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "fix-lint": "tslint -c tslint.json 'src/**/*.ts' --fix"
+  }
+}
