@@ -8,6 +8,7 @@ const log = require("fancy-log");
 const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
 class Properties {
     constructor() {
+        this.messages = 0;
         if (Properties.instance) {
             throw new Error("Error: Instantiation failed: Use Properties.getInstance() instead of new.");
         }
@@ -45,6 +46,27 @@ class Properties {
                 const commandClass = new commandFile[commandName]();
                 log(`Registered command ${commandName}`);
                 this.setCommand(commandName.toLowerCase(), commandClass);
+            });
+        });
+    }
+    async setupSchedules() {
+        fs_1.readdir(path_1.join(".", "./dist/Lib/Schedules/"), (error, files) => {
+            if (error) {
+                log.error(error);
+                throw error;
+            }
+            if (this.schedules === undefined) {
+                this.schedules = new Array();
+            }
+            files.forEach((file) => {
+                delete require.cache[require.resolve(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`)];
+                const scheduleFile = require(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`);
+                const scheduleName = file.split(".")[0];
+                if (this.schedules[scheduleName] !== undefined) {
+                    this.schedules[scheduleName].cancel();
+                }
+                this.schedules[scheduleName] = scheduleFile[scheduleName].run();
+                log(`Registered Schedule ${scheduleName}`);
             });
         });
     }
