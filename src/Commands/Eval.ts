@@ -3,7 +3,7 @@ import { Message, MessageEmbed, TextChannel, Util } from "discord.js";
 import * as log from "fancy-log";
 
 import { Command } from "../Lib/Command";
-import { Properties } from "../Lib/Properties";
+import { Application } from "../Lib/Application";
 
 export class Eval implements Command {
     // tslint:disable-next-line:max-line-length
@@ -13,7 +13,7 @@ export class Eval implements Command {
     ];
     public permissionRequired = "BOT_OWNER";
 
-    private props = Properties.getInstance();
+    private app = Application.getInstance();
 
     public async run(message: Message, args: string[]) {
         if (args.length < 1) { return this.missingArgs(message); }

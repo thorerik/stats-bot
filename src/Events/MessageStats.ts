@@ -12,6 +12,6 @@ export class MessageStats extends EventBase {
     }
 
     public async run(message: Message) {
-        this.props.messages += 1;
+        this.app.messages += 1;
     }
 }

@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const moment = require("moment");
-const Properties_1 = require("./Properties");
+const Application_1 = require("./Application");
 class LogError {
     constructor() {
-        this.props = Properties_1.Properties.getInstance();
+        this.app = Application_1.Application.getInstance();
     }
     /**
      * Log
@@ -22,7 +22,7 @@ class LogError {
                     title: moment().format("ddd, Do of MMM @ HH:mm:ss"),
                 }],
         };
-        await this.props.getLogWebhookInstance().send(webhookContent);
+        await this.app.getLogWebhookInstance().send(webhookContent);
     }
 }
 exports.LogError = LogError;

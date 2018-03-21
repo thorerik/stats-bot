@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
-const Properties_1 = require("../Lib/Properties");
+const Application_1 = require("../Lib/Application");
 class Info {
     constructor() {
         this.help = "Gets you some information about the bot";
@@ -10,7 +10,7 @@ class Info {
             "info",
         ];
         this.permissionRequired = discord_js_1.Permissions.FLAGS.SEND_MESSAGES;
-        this.props = Properties_1.Properties.getInstance();
+        this.app = Application_1.Application.getInstance();
     }
     async run(message, args) {
         const guildConfiguration = await GuildConfiguration_1.GuildConfiguration.findOne({ where: { guildID: message.guild.id.toString() } });
@@ -30,8 +30,8 @@ class Info {
         embed.addField("Version", version);
         embed.addField("Author", "Tuxy Fluffyclaws#1337", true);
         embed.addField("Support guild", "https://discord.gg/yk8z9bz", true);
-        embed.addField("Guilds", this.props.client.guilds.size, true);
-        embed.addField("Users", this.props.client.users.size, true);
+        embed.addField("Guilds", this.app.client.guilds.size, true);
+        embed.addField("Users", this.app.client.users.size, true);
         embed.addField("Prefix", guildConfig.prefix, true);
         embed.addField("Record messages", guildConfig.recordMessages, true);
         message.channel.send({ embed });

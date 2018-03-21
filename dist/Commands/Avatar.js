@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const log = require("fancy-log");
-const Properties_1 = require("../Lib/Properties");
+const Application_1 = require("../Lib/Application");
 class Avatar {
     constructor() {
         // tslint:disable-next-line:max-line-length
@@ -12,9 +12,9 @@ class Avatar {
         this.permissionRequired = "BOT_OWNER";
     }
     async run(message, args) {
-        const props = Properties_1.Properties.getInstance();
+        const app = Application_1.Application.getInstance();
         try {
-            await props.client.user.setAvatar(args.shift());
+            await app.client.user.setAvatar(args.shift());
             await message.reply(`Avatar changed`);
         }
         catch (e) {

@@ -4,7 +4,7 @@ import * as log from "fancy-log";
 
 import { GuildConfiguration } from "../Database/Models/GuildConfiguration";
 import { Command } from "../Lib/Command";
-import { Properties } from "../Lib/Properties";
+import { Application } from "../Lib/Application";
 
 export class Info implements Command {
     public help = "Gets you some information about the bot";
@@ -12,7 +12,7 @@ export class Info implements Command {
         "info",
     ];
     public permissionRequired = Permissions.FLAGS.SEND_MESSAGES;
-    private props = Properties.getInstance();
+    private app = Application.getInstance();
 
     public async run(message: Message, args: string[]) {
         const guildConfiguration = await GuildConfiguration.findOne({where: {guildID: message.guild.id.toString()}});
@@ -39,8 +39,8 @@ export class Info implements Command {
         embed.addField("Version", version);
         embed.addField("Author", "Tuxy Fluffyclaws#1337", true);
         embed.addField("Support guild", "https://discord.gg/yk8z9bz", true);
-        embed.addField("Guilds", this.props.client.guilds.size, true);
-        embed.addField("Users", this.props.client.users.size, true);
+        embed.addField("Guilds", this.app.client.guilds.size, true);
+        embed.addField("Users", this.app.client.users.size, true);
         embed.addField("Prefix", guildConfig.prefix, true);
         embed.addField("Record messages", guildConfig.recordMessages, true);
 

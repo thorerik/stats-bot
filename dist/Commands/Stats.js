@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
 const Stats_1 = require("../Database/Models/Stats");
-const Properties_1 = require("../Lib/Properties");
 class Stats {
     constructor() {
         this.help = "Gets you some stats for current guild";
@@ -11,7 +10,6 @@ class Stats {
             "stats",
         ];
         this.permissionRequired = discord_js_1.Permissions.FLAGS.SEND_MESSAGES;
-        this.props = Properties_1.Properties.getInstance();
     }
     async run(message, args) {
         const guildConfiguration = await GuildConfiguration_1.GuildConfiguration.findOne({ where: { guildID: message.guild.id.toString() } });

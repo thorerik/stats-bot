@@ -5,7 +5,6 @@ import * as log from "fancy-log";
 import { GuildConfiguration } from "../Database/Models/GuildConfiguration";
 import { Stats as DbStats } from "../Database/Models/Stats";
 import { Command } from "../Lib/Command";
-import { Properties } from "../Lib/Properties";
 
 export class Stats implements Command {
     public help = "Gets you some stats for current guild";
@@ -13,7 +12,6 @@ export class Stats implements Command {
         "stats",
     ];
     public permissionRequired = Permissions.FLAGS.SEND_MESSAGES;
-    private props = Properties.getInstance();
 
     public async run(message: Message, args: string[]) {
         const guildConfiguration = await GuildConfiguration.findOne({where: {guildID: message.guild.id.toString()}});

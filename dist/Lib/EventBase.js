@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Properties_1 = require("../Lib/Properties");
+const Application_1 = require("../Lib/Application");
 class EventBase {
     constructor() {
         this.subscribe = "message";
-        this.props = Properties_1.Properties.getInstance();
+        this.app = Application_1.Application.getInstance();
     }
 }
 exports.EventBase = EventBase;

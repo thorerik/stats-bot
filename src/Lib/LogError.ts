@@ -1,10 +1,10 @@
 import { Message, Util, WebhookClient } from "discord.js";
 import * as moment from "moment";
-import { Properties } from "./Properties";
+import { Application } from "./Application";
 
 export class LogError {
 
-    private props = Properties.getInstance();
+    private app = Application.getInstance();
 
     /**
      * Log
@@ -22,6 +22,6 @@ export class LogError {
             }],
         };
 
-        await this.props.getLogWebhookInstance().send(webhookContent);
+        await this.app.getLogWebhookInstance().send(webhookContent);
     }
 }

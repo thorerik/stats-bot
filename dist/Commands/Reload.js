@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const log = require("fancy-log");
-const Properties_1 = require("../Lib/Properties");
+const Application_1 = require("../Lib/Application");
 class Reload {
     constructor() {
         this.help = "Reloads all commands in the bot";
@@ -9,11 +9,11 @@ class Reload {
             "reload",
         ];
         this.permissionRequired = "BOT_OWNER";
-        this.props = Properties_1.Properties.getInstance();
+        this.app = Application_1.Application.getInstance();
     }
     async run(message, args) {
         log("Reloading commands");
-        this.props.registerCommands();
+        this.app.registerCommands();
         message.react("👍");
     }
 }

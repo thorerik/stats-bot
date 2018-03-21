@@ -1,11 +1,11 @@
-import { Properties } from "../Lib/Properties";
+import { Application } from "../Lib/Application";
 
 export class EventBase {
     public subscribe = "message";
 
-    protected props: Properties;
+    protected app: Application;
 
     constructor() {
-        this.props = Properties.getInstance();
+        this.app = Application.getInstance();
     }
 }

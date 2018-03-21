@@ -32,7 +32,7 @@ export class CommandProcessor extends EventBase {
 
     private runCommand(command: string) {
         try {
-            const cmd = this.props.getCommand(command);
+            const cmd = this.app.getCommand(command);
             if (
                 // User has permission
                 (typeof cmd.permissionRequired !== "string" &&
@@ -40,7 +40,7 @@ export class CommandProcessor extends EventBase {
                 // User is owner
                 (typeof cmd.permissionRequired === "string" &&
                     cmd.permissionRequired === "BOT_OWNER" &&
-                    this.props.config.config.owners.includes(this.message.member.id))) {
+                    this.app.config.config.owners.includes(this.message.member.id))) {
                 cmd.run(this.message, this.args);
             } else {
                 this.message.reply(`Sorry, you do not have permission for this command`);

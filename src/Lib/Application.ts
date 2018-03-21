@@ -1,56 +1,83 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = require("fs");
-const path_1 = require("path");
-const discord_js_1 = require("discord.js");
-const sequelize_typescript_1 = require("sequelize-typescript");
-const log = require("fancy-log");
-const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
-class Properties {
+import { readdir } from "fs";
+import { join, resolve } from "path";
+
+import { Client, Collection, WebhookClient } from "discord.js";
+import { ISequelizeConfig, Sequelize } from "sequelize-typescript";
+
+import * as log from "fancy-log";
+
+import { Command } from "./Command";
+import { Config } from "./Config";
+
+import { GuildConfiguration } from "../Database/Models/GuildConfiguration";
+
+export class Application {
+
+    public static getInstance(): Application {
+        return Application.instance;
+    }
+
+    private static instance: Application = new Application();
+
+    public client: Client;
+    public db: Sequelize;
+    public messages: number = 0;
+
+    public config: Config;
+    private logWH: WebhookClient;
+    private commands: Collection<string, Command>;
+    private schedules: any[];
+
     constructor() {
-        this.messages = 0;
-        if (Properties.instance) {
-            throw new Error("Error: Instantiation failed: Use Properties.getInstance() instead of new.");
+        if (Application.instance) {
+            throw new Error("Error: Instantiation failed: Use Application.getInstance() instead of new.");
         }
-        Properties.instance = this;
+        Application.instance = this;
     }
-    static getInstance() {
-        return Properties.instance;
-    }
-    getLogWebhookInstance() {
+
+    public getLogWebhookInstance(): WebhookClient {
         if (!this.logWH) {
-            this.logWH = new discord_js_1.WebhookClient(this.config.config.webhooks.logs.id, this.config.config.webhooks.logs.token);
+            this.logWH = new WebhookClient(this.config.config.webhooks.logs.id, this.config.config.webhooks.logs.token);
         }
         return this.logWH;
     }
-    setCommand(name, command) {
+
+    public setCommand(name: string, command: Command) {
         this.commands.set(name, command);
     }
-    getCommand(name) {
+
+    public getCommand(name: string): Command {
         return this.commands.get(name);
     }
-    getCommands() {
+
+    public getCommands(): Collection<string, Command> {
         return this.commands;
     }
-    registerCommands() {
-        this.commands = new discord_js_1.Collection();
-        fs_1.readdir(path_1.join(".", "./dist/Commands/"), (error, files) => {
+
+    public registerCommands() {
+        this.commands = new Collection<string, Command>();
+        readdir(join(".", "./dist/Commands/"), (error, files) => {
             if (error) {
                 log.error(error);
                 throw error;
             }
+
             files.forEach((file) => {
-                delete require.cache[require.resolve(`${path_1.resolve(".")}/dist/Commands/${file}`)];
-                const commandFile = require(`${path_1.resolve(".")}/dist/Commands/${file}`);
+                delete require.cache[require.resolve(`${resolve(".")}/dist/Commands/${file}`)];
+                const commandFile = require(`${resolve(".")}/dist/Commands/${file}`);
                 const commandName = file.split(".")[0];
+
                 const commandClass = new commandFile[commandName]();
+
                 log(`Registered command ${commandName}`);
+
                 this.setCommand(commandName.toLowerCase(), commandClass);
             });
         });
     }
-    async setupSchedules() {
-        fs_1.readdir(path_1.join(".", "./dist/Lib/Schedules/"), (error, files) => {
+
+    public async setupSchedules() {
+        readdir(join(".", "./dist/Lib/Schedules/"), (error, files) => {
             if (error) {
                 log.error(error);
                 throw error;
@@ -58,25 +85,31 @@ class Properties {
             if (this.schedules === undefined) {
                 this.schedules = new Array();
             }
+
             files.forEach((file) => {
-                delete require.cache[require.resolve(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`)];
-                const scheduleFile = require(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`);
+                delete require.cache[require.resolve(`${resolve(".")}/dist/Lib/Schedules/${file}`)];
+                const scheduleFile = require(`${resolve(".")}/dist/Lib/Schedules/${file}`);
                 const scheduleName = file.split(".")[0];
+
                 if (this.schedules[scheduleName] !== undefined) {
                     this.schedules[scheduleName].cancel();
                 }
+
                 this.schedules[scheduleName] = scheduleFile[scheduleName].run();
+
                 log(`Registered Schedule ${scheduleName}`);
+
             });
         });
     }
-    async setupDatabase() {
-        this.db = new sequelize_typescript_1.Sequelize({
+
+    public async setupDatabase() {
+        this.db = new Sequelize({
             database: this.config.config.database.database,
             dialect: this.config.config.database.dialect,
             host: this.config.config.database.host,
             logging: false,
-            modelPaths: [path_1.join(path_1.resolve("."), "dist/Database/Models")],
+            modelPaths: [join(resolve("."), "dist/Database/Models")],
             operatorsAliases: false,
             password: this.config.config.database.password,
             pool: {
@@ -88,14 +121,16 @@ class Properties {
             port: this.config.config.database.port,
             username: this.config.config.database.username,
         });
+
         await this.db.sync();
     }
-    async verifyDatabase() {
+
+    public async verifyDatabase() {
         this.client.guilds.forEach(async (guild) => {
-            let guildConfiguration = await GuildConfiguration_1.GuildConfiguration.findOne({ where: { guildID: guild.id.toString() } });
+            let guildConfiguration = await GuildConfiguration.findOne({where: {guildID: guild.id.toString()}});
             if (!guildConfiguration) {
                 console.log(`Didn't find ${guild.name} in database, adding…`);
-                guildConfiguration = new GuildConfiguration_1.GuildConfiguration({
+                guildConfiguration = new GuildConfiguration({
                     guildID: guild.id.toString(),
                     settings: JSON.stringify({
                         prefix: "st!",
@@ -105,9 +140,8 @@ class Properties {
             }
         });
     }
-    deleteCommand(name) {
+
+    private deleteCommand(name: string) {
         this.commands.delete(name);
     }
 }
-Properties.instance = new Properties();
-exports.Properties = Properties;

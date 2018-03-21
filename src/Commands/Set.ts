@@ -4,7 +4,6 @@ import * as log from "fancy-log";
 
 import { GuildConfiguration } from "../Database/Models/GuildConfiguration";
 import { Command } from "../Lib/Command";
-import { Properties } from "../Lib/Properties";
 
 export class Set implements Command {
     // tslint:disable-next-line:max-line-length

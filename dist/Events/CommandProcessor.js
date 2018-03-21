@@ -26,7 +26,7 @@ class CommandProcessor extends EventBase_1.EventBase {
     }
     runCommand(command) {
         try {
-            const cmd = this.props.getCommand(command);
+            const cmd = this.app.getCommand(command);
             if (
             // User has permission
             (typeof cmd.permissionRequired !== "string" &&
@@ -34,7 +34,7 @@ class CommandProcessor extends EventBase_1.EventBase {
                 // User is owner
                 (typeof cmd.permissionRequired === "string" &&
                     cmd.permissionRequired === "BOT_OWNER" &&
-                    this.props.config.config.owners.includes(this.message.member.id))) {
+                    this.app.config.config.owners.includes(this.message.member.id))) {
                 cmd.run(this.message, this.args);
             }
             else {

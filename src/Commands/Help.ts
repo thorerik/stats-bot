@@ -4,7 +4,7 @@ import * as log from "fancy-log";
 
 import { GuildConfiguration } from "../Database/Models/GuildConfiguration";
 import { Command } from "../Lib/Command";
-import { Properties } from "../Lib/Properties";
+import { Application } from "../Lib/Application";
 
 export class Help implements Command {
     public help = "Gets you the help text";
@@ -13,12 +13,12 @@ export class Help implements Command {
         "help ping",
     ];
     public permissionRequired = Permissions.FLAGS.SEND_MESSAGES;
-    private props = Properties.getInstance();
+    private app = Application.getInstance();
 
     public async run(message: Message, args: string[]) {
         const guildConfiguration = await GuildConfiguration.findOne({where: {guildID: message.guild.id.toString()}});
         const guildConfig = JSON.parse(guildConfiguration.settings);
-        const commands = this.props.getCommands();
+        const commands = this.app.getCommands();
         const prefix = guildConfig.prefix;
 
         let reply = "```";
@@ -49,7 +49,7 @@ export class Help implements Command {
                     (
                         typeof command.permissionRequired === "string" &&
                         command.permissionRequired === "BOT_OWNER" &&
-                        this.props.config.config.owners.includes(message.member.id)
+                        this.app.config.config.owners.includes(message.member.id)
                     );
             }).forEach((command) => {
                 reply += `${prefix}${command.constructor.name.toLowerCase()}`;

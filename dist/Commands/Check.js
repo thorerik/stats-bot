@@ -5,7 +5,7 @@ const log = require("fancy-log");
 const snekfetch = require("snekfetch");
 const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
 const LogError_1 = require("../Lib/LogError");
-const Properties_1 = require("../Lib/Properties");
+const Application_1 = require("../Lib/Application");
 class Check {
     constructor() {
         // tslint:disable-next-line:max-line-length
@@ -16,7 +16,7 @@ class Check {
             "check guild <invite link>",
         ];
         this.permissionRequired = "BOT_OWNER";
-        this.props = Properties_1.Properties.getInstance();
+        this.app = Application_1.Application.getInstance();
     }
     async run(message, args) {
         const subCommand = args.shift();
@@ -28,7 +28,7 @@ class Check {
         }
     }
     async sanityCheck() {
-        await this.props.client.guilds.array().forEach(async (guild) => {
+        await this.app.client.guilds.array().forEach(async (guild) => {
             let msg = "";
             const guildConfiguration = await GuildConfiguration_1.GuildConfiguration.findOne({ where: { guildID: guild.id.toString() } });
             if (guildConfiguration) {
@@ -81,10 +81,10 @@ class Check {
         try {
             if (!parseInt(invite, 10)) {
                 const inviteData = await snekfetch.get(`https://discordapp.com/api/invite/${invite}`);
-                this.guild = await this.props.client.guilds.get(inviteData.body.guild.id);
+                this.guild = await this.app.client.guilds.get(inviteData.body.guild.id);
             }
             else {
-                this.guild = await this.props.client.guilds.get(guildParam);
+                this.guild = await this.app.client.guilds.get(guildParam);
             }
         }
         catch (e) {

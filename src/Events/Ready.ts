@@ -1,7 +1,7 @@
 import * as log from "fancy-log";
 
 import { EventBase } from "../Lib/EventBase";
-import { Properties } from "../Lib/Properties";
+import { Application } from "../Lib/Application";
 
 export class Ready extends EventBase {
     public subscribe = "ready";
@@ -11,17 +11,17 @@ export class Ready extends EventBase {
     public run() {
         log(
             `${
-                this.props.client.user.username
+                this.app.client.user.username
             } - (${
-                this.props.client.user.id
+                this.app.client.user.id
             }) on ${
-                this.props.client.guilds.size.toString()
+                this.app.client.guilds.size.toString()
             } guilds with ${
-                this.props.client.channels.size.toString()
+                this.app.client.channels.size.toString()
             } channels`,
         );
-        const props = Properties.getInstance();
-        props.verifyDatabase();
-        props.setupSchedules();
+        
+        this.app.verifyDatabase();
+        this.app.setupSchedules();
     }
 }

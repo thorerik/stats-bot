@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const Properties_1 = require("../Lib/Properties");
+const Application_1 = require("../Lib/Application");
 class Eval {
     constructor() {
         // tslint:disable-next-line:max-line-length
@@ -10,7 +10,7 @@ class Eval {
             "eval message.reply('hi')",
         ];
         this.permissionRequired = "BOT_OWNER";
-        this.props = Properties_1.Properties.getInstance();
+        this.app = Application_1.Application.getInstance();
     }
     async run(message, args) {
         if (args.length < 1) {

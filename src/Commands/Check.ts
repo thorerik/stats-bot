@@ -6,7 +6,7 @@ import * as snekfetch from "snekfetch";
 import { GuildConfiguration } from "../Database/Models/GuildConfiguration";
 import { Command } from "../Lib/Command";
 import { LogError } from "../Lib/LogError";
-import { Properties } from "../Lib/Properties";
+import { Application } from "../Lib/Application";
 
 export class Check implements Command {
     // tslint:disable-next-line:max-line-length
@@ -18,7 +18,7 @@ export class Check implements Command {
     ];
     public permissionRequired = "BOT_OWNER";
 
-    private props = Properties.getInstance();
+    private app = Application.getInstance();
 
     private guild: Guild;
 
@@ -32,7 +32,7 @@ export class Check implements Command {
     }
 
     private async sanityCheck() {
-        await this.props.client.guilds.array().forEach(async (guild) => {
+        await this.app.client.guilds.array().forEach(async (guild) => {
             let msg = "";
             const guildConfiguration = await GuildConfiguration.findOne({ where: { guildID: guild.id.toString() } });
             if (guildConfiguration) {
@@ -94,9 +94,9 @@ export class Check implements Command {
         try {
             if (!parseInt(invite, 10)) {
                 const inviteData = await snekfetch.get(`https://discordapp.com/api/invite/${invite}`);
-                this.guild = await this.props.client.guilds.get(inviteData.body.guild.id);
+                this.guild = await this.app.client.guilds.get(inviteData.body.guild.id);
             } else {
-                this.guild = await this.props.client.guilds.get(guildParam);
+                this.guild = await this.app.client.guilds.get(guildParam);
             }
         } catch (e) {
             throw Error (e);

@@ -6,11 +6,11 @@ import { Client, Message } from "discord.js";
 import * as log from "fancy-log";
 
 import { Config } from "./Lib/Config";
-import { Properties } from "./Lib/Properties";
+import { Application } from "./Lib/Application";
 
-const props = Properties.getInstance();
-props.config = new Config("./config.json");
-props.client = new Client({
+const app = Application.getInstance();
+app.config = new Config("./config.json");
+app.client = new Client({
     disabledEvents: [
         "TYPING_START",
     ],
@@ -18,10 +18,10 @@ props.client = new Client({
 });
 
 // Register commands
-props.registerCommands();
+app.registerCommands();
 
 // Setup Database
-props.setupDatabase();
+app.setupDatabase();
 
 // Register events
 readdir(join(".", "./dist/Events/"), (error, files) => {
@@ -38,14 +38,14 @@ readdir(join(".", "./dist/Events/"), (error, files) => {
 
         log(`Registered event ${eventName} on ${eventClass.subscribe}`);
 
-        props.client.on(
+        app.client.on(
             eventClass.subscribe,
             (...args) => eventClass.run(...args),
         );
     });
 });
 
-props.client.login(props.config.config.token).catch((err) => {
+app.client.login(app.config.config.token).catch((err) => {
     log.error(err);
     throw err;
 });
