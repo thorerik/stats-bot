@@ -18,10 +18,13 @@ export class Config {
             },
         },
         dblToken: string,
+        influxDB: {
+            host: string,
+            database: string,
+        },
         prefix: string,
         token: string,
         owners: string[],
-        pushGateway: string,
         webhooks: {
             logs: {
                 id: string,

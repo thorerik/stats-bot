@@ -12,6 +12,6 @@ export class MessageStats extends EventBase {
     }
 
     public async run(message: Message) {
-        this.app.messages += 1;
+        this.app.writeInfluxData(message);
     }
 }

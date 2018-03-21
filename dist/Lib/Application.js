@@ -5,6 +5,7 @@ const path_1 = require("path");
 const discord_js_1 = require("discord.js");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const log = require("fancy-log");
+const influx_1 = require("influx");
 const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
 class Application {
     constructor() {
@@ -49,27 +50,6 @@ class Application {
             });
         });
     }
-    async setupSchedules() {
-        fs_1.readdir(path_1.join(".", "./dist/Lib/Schedules/"), (error, files) => {
-            if (error) {
-                log.error(error);
-                throw error;
-            }
-            if (this.schedules === undefined) {
-                this.schedules = new Array();
-            }
-            files.forEach((file) => {
-                delete require.cache[require.resolve(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`)];
-                const scheduleFile = require(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`);
-                const scheduleName = file.split(".")[0];
-                if (this.schedules[scheduleName] !== undefined) {
-                    this.schedules[scheduleName].cancel();
-                }
-                this.schedules[scheduleName] = scheduleFile[scheduleName].run();
-                log(`Registered Schedule ${scheduleName}`);
-            });
-        });
-    }
     async setupDatabase() {
         this.db = new sequelize_typescript_1.Sequelize({
             database: this.config.config.database.database,
@@ -104,6 +84,38 @@ class Application {
                 await guildConfiguration.save();
             }
         });
+    }
+    async writeInfluxData(message) {
+        this.influxDB.writePoints([
+            {
+                measurement: 'messages',
+                fields: { count: 1 },
+                tags: { user: message.author.id, guild: message.guild.id, guildName: message.guild.name },
+            }
+        ]);
+    }
+    async prepareInfluxDB() {
+        this.influxDB = await new influx_1.InfluxDB({
+            host: this.config.config.influxDB.host,
+            database: this.config.config.influxDB.database,
+            schema: [
+                {
+                    measurement: 'messages',
+                    fields: {
+                        count: influx_1.FieldType.INTEGER,
+                    },
+                    tags: [
+                        'user',
+                        'guild',
+                        'guildName'
+                    ]
+                }
+            ],
+        });
+        let dbs = await this.influxDB.getDatabaseNames();
+        if (!dbs.includes(this.config.config.influxDB.database)) {
+            await this.influxDB.createDatabase(this.config.config.influxDB.database);
+        }
     }
     deleteCommand(name) {
         this.commands.delete(name);

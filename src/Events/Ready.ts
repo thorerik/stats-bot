@@ -22,6 +22,6 @@ export class Ready extends EventBase {
         );
         
         this.app.verifyDatabase();
-        this.app.setupSchedules();
+        this.app.prepareInfluxDB();
     }
 }

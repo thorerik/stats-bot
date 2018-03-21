@@ -7,7 +7,7 @@ class MessageStats extends EventBase_1.EventBase {
         this.subscribe = "message";
     }
     async run(message) {
-        this.app.messages += 1;
+        this.app.writeInfluxData(message);
     }
 }
 exports.MessageStats = MessageStats;
