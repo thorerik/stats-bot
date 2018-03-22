@@ -1,4 +1,5 @@
 import { readdir } from "fs";
+import { hostname } from "os";
 import { join, resolve } from "path";
 
 import { Client, Collection, Message, WebhookClient } from "discord.js";
@@ -6,6 +7,7 @@ import { ISequelizeConfig, Sequelize } from "sequelize-typescript";
 
 import * as log from "fancy-log";
 import { InfluxDB, FieldType } from "influx";
+import * as pidusage from "pidusage";
 
 import { Command } from "./Command";
 import { Config } from "./Config";
@@ -28,6 +30,7 @@ export class Application {
     private logWH: WebhookClient;
     private commands: Collection<string, Command>;
     private influxDB: InfluxDB;
+    private schedules: any[];
 
     constructor() {
         if (Application.instance) {
@@ -99,6 +102,40 @@ export class Application {
         await this.db.sync();
     }
 
+
+    public async setupSchedules() {
+        readdir(join(".", "./dist/Lib/Schedules/"), (error, files) => {
+            if (error) {
+                log.error(error);
+                throw error;
+            }
+            if (this.schedules === undefined) {
+                this.schedules = new Array();
+            }
+
+            files.forEach((file) => {
+                delete require.cache[require.resolve(`${resolve(".")}/dist/Lib/Schedules/${file}`)];
+                const scheduleFile = require(`${resolve(".")}/dist/Lib/Schedules/${file}`);
+                const scheduleName = file.split(".")[0];
+
+                if (this.schedules[scheduleName] !== undefined) {
+                    try {
+                        this.schedules[scheduleName].cancel();
+                    } catch(e) {
+                    } finally {
+                        delete this.schedules[scheduleName];
+                    }
+                }
+
+                this.schedules[scheduleName] = scheduleFile[scheduleName].run();
+
+                log(`Registered Schedule ${scheduleName}`);
+
+            });
+        });
+    }
+
+
     public async verifyDatabase() {
         this.client.guilds.forEach(async (guild) => {
             let guildConfiguration = await GuildConfiguration.findOne({where: {guildID: guild.id.toString()}});
@@ -125,6 +162,24 @@ export class Application {
         ]);
     }
 
+    public async writePerformanceData() {
+        const stats = await pidusage(process.pid);
+        this.influxDB.writePoints([
+            {
+                measurement: 'performance',
+                fields: {
+                    cpu: stats.cpu,
+                    memory: stats.memory,
+                    uptime: stats.elapsed
+                },
+                tags: {
+                    bot: this.client.user.username,
+                    host: hostname(),
+                }
+            }
+        ]);
+    }
+
     public async prepareInfluxDB() {
         this.influxDB = await new InfluxDB({
             host: this.config.config.influxDB.host,
@@ -138,9 +193,22 @@ export class Application {
                     tags: [
                         'user',
                         'guild',
-                        'guildName'
+                        'guildName',
+                        'bot'
                     ]
-                }
+                },
+                {
+                    measurement: 'performance',
+                    fields: {
+                        cpu: FieldType.INTEGER,
+                        memory: FieldType.INTEGER,
+                        uptime: FieldType.INTEGER
+                    },
+                    tags: [
+                        'bot',
+                        'host'
+                    ]
+                },
             ],
         });
 

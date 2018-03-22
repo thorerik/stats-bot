@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
+const os_1 = require("os");
 const path_1 = require("path");
 const discord_js_1 = require("discord.js");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const log = require("fancy-log");
 const influx_1 = require("influx");
+const pidusage = require("pidusage");
 const GuildConfiguration_1 = require("../Database/Models/GuildConfiguration");
 class Application {
     constructor() {
@@ -70,6 +72,34 @@ class Application {
         });
         await this.db.sync();
     }
+    async setupSchedules() {
+        fs_1.readdir(path_1.join(".", "./dist/Lib/Schedules/"), (error, files) => {
+            if (error) {
+                log.error(error);
+                throw error;
+            }
+            if (this.schedules === undefined) {
+                this.schedules = new Array();
+            }
+            files.forEach((file) => {
+                delete require.cache[require.resolve(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`)];
+                const scheduleFile = require(`${path_1.resolve(".")}/dist/Lib/Schedules/${file}`);
+                const scheduleName = file.split(".")[0];
+                if (this.schedules[scheduleName] !== undefined) {
+                    try {
+                        this.schedules[scheduleName].cancel();
+                    }
+                    catch (e) {
+                    }
+                    finally {
+                        delete this.schedules[scheduleName];
+                    }
+                }
+                this.schedules[scheduleName] = scheduleFile[scheduleName].run();
+                log(`Registered Schedule ${scheduleName}`);
+            });
+        });
+    }
     async verifyDatabase() {
         this.client.guilds.forEach(async (guild) => {
             let guildConfiguration = await GuildConfiguration_1.GuildConfiguration.findOne({ where: { guildID: guild.id.toString() } });
@@ -94,6 +124,23 @@ class Application {
             }
         ]);
     }
+    async writePerformanceData() {
+        const stats = await pidusage(process.pid);
+        this.influxDB.writePoints([
+            {
+                measurement: 'performance',
+                fields: {
+                    cpu: stats.cpu,
+                    memory: stats.memory,
+                    uptime: stats.elapsed
+                },
+                tags: {
+                    bot: this.client.user.username,
+                    host: os_1.hostname(),
+                }
+            }
+        ]);
+    }
     async prepareInfluxDB() {
         this.influxDB = await new influx_1.InfluxDB({
             host: this.config.config.influxDB.host,
@@ -107,9 +154,22 @@ class Application {
                     tags: [
                         'user',
                         'guild',
-                        'guildName'
+                        'guildName',
+                        'bot'
                     ]
-                }
+                },
+                {
+                    measurement: 'performance',
+                    fields: {
+                        cpu: influx_1.FieldType.INTEGER,
+                        memory: influx_1.FieldType.INTEGER,
+                        uptime: influx_1.FieldType.INTEGER
+                    },
+                    tags: [
+                        'bot',
+                        'host'
+                    ]
+                },
             ],
         });
         let dbs = await this.influxDB.getDatabaseNames();
