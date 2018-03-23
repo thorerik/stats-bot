@@ -157,7 +157,7 @@ export class Application {
             {
                 measurement: 'messages',
                 fields: { count: 1 },
-                tags: { user: message.author.id, guild: message.guild.id, guildName: message.guild.name },
+                tags: { user: message.author.id, guild: message.guild.id, guildName: message.guild.name, bot: this.client.user.username },
             }
         ]);
     }
