@@ -21,20 +21,20 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-1.0.6.tgz#3e02972728c69248c2af08d60a48cbb8680fffdf"
 
 "@types/lodash@*":
-  version "4.14.105"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.105.tgz#9fcc4627a1f98f8f8fce79ddb2bff4afd97e959b"
+  version "4.14.106"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.106.tgz#6093e9a02aa567ddecfe9afadca89e53e5dce4dd"
 
 "@types/node@*":
-  version "9.4.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.7.tgz#57d81cd98719df2c9de118f2d5f3b1120dcd7275"
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.0.tgz#d3480ee666df9784b1001a1872a2f6ccefb6c2d7"
 
 "@types/node@6.0.41":
   version "6.0.41"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.41.tgz#578cf53aaec65887bcaf16792f8722932e8ff8ea"
 
 "@types/node@^8.5.9":
-  version "8.9.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.9.5.tgz#162b864bc70be077e6db212b322754917929e976"
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.0.tgz#f5d649cc49af8ed6507d15dc6e9b43fe8b927540"
 
 "@types/reflect-metadata@0.0.4":
   version "0.0.4"
@@ -95,10 +95,11 @@ big-number@0.3.1:
   resolved "https://registry.yarnpkg.com/big-number/-/big-number-0.3.1.tgz#ac73020c0a59bb79eb17c2ce2db77f77d974e013"
 
 bl@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/bl/-/bl-1.2.1.tgz#cac328f7bee45730d404b692203fcb590e172d5e"
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/bl/-/bl-1.2.2.tgz#a160911717103c07410cef63ef51b397c025af9c"
   dependencies:
-    readable-stream "^2.0.5"
+    readable-stream "^2.3.5"
+    safe-buffer "^5.1.1"
 
 bluebird@^3.0.5, bluebird@^3.4.1, bluebird@^3.4.6, bluebird@^3.5.0, bluebird@^3.5.1:
   version "3.5.1"
@@ -229,10 +230,10 @@ depd@^1.1.0, depd@^1.1.2:
   resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/d041cb2460a294b026e73750647647168ce7359a"
   dependencies:
     pako "^1.0.0"
-    prism-media "github:hydrabolt/prism-media"
-    snekfetch "^3.5.0"
+    prism-media "^0.2.0"
+    snekfetch "^3.6.0"
     tweetnacl "^1.0.0"
-    ws "^3.3.1"
+    ws "^4.0.0"
 
 dottie@^2.0.0:
   version "2.0.0"
@@ -679,9 +680,9 @@ pify@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
 
-"prism-media@github:hydrabolt/prism-media":
+prism-media@^0.2.0:
   version "0.2.0"
-  resolved "https://codeload.github.com/hydrabolt/prism-media/tar.gz/b367fca09ecea193b17f3611cb41a05154c9d682"
+  resolved "https://registry.yarnpkg.com/prism-media/-/prism-media-0.2.0.tgz#82c183da430c41c3025df3610a92a61b107b1918"
 
 process-nextick-args@~2.0.0:
   version "2.0.0"
@@ -710,7 +711,7 @@ read-pkg@^2.0.0:
     normalize-package-data "^2.3.2"
     path-type "^2.0.0"
 
-readable-stream@^2.0.5, readable-stream@^2.2.6:
+readable-stream@^2.2.6, readable-stream@^2.3.5:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.5.tgz#b4f85003a938cbb6ecbce2a124fb1012bd1a838d"
   dependencies:
@@ -751,7 +752,7 @@ retry-as-promised@^2.3.2:
     bluebird "^3.4.6"
     debug "^2.6.9"
 
-safe-buffer@~5.1.0, safe-buffer@~5.1.1:
+safe-buffer@^5.1.1, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
@@ -784,8 +785,8 @@ sequelize-typescript@^0.6.2:
     glob "7.1.2"
 
 sequelize@^4.32.1:
-  version "4.37.3"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.37.3.tgz#efa1946598df7e370a10f4b0d30cc23e4ddf5b2d"
+  version "4.37.4"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.37.4.tgz#562d64478608da54dcda03c8daef5f964e780014"
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
@@ -831,7 +832,7 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-snekfetch@^3.5.0:
+snekfetch@^3.6.0:
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/snekfetch/-/snekfetch-3.6.4.tgz#d13e80a616d892f3d38daae4289f4d258a645120"
 
@@ -949,10 +950,6 @@ tweetnacl@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.0.tgz#713d8b818da42068740bf68386d0479e66fc8a7b"
 
-ultron@~1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.1.tgz#9fe1536a10a664a65266a1e3ccf85fd36302bc9c"
-
 umzug@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/umzug/-/umzug-2.1.0.tgz#c49dd71c7c26d082a9c9d3592dc6dc92cf867761"
@@ -1012,13 +1009,12 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
 
-ws@^3.3.1:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-3.3.3.tgz#f1cf84fe2d5e901ebce94efaece785f187a228f2"
+ws@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-4.1.0.tgz#a979b5d7d4da68bf54efe0408967c324869a7289"
   dependencies:
     async-limiter "~1.0.0"
     safe-buffer "~5.1.0"
-    ultron "~1.1.0"
 
 y18n@^3.2.1:
   version "3.2.1"
